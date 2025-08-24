@@ -39,7 +39,8 @@ namespace WebApi.Controllers
         [HttpPost]
         public async Task<ActionResult<Producto>> Post([FromBody] Producto value)
         {
-            DbContext.Producto.Add(value);
+            value.ProductoId = Guid.NewGuid().ToString().ToUpper();
+            await DbContext.Producto.AddAsync(value);
             await DbContext.SaveChangesAsync();
             return new CreatedAtRouteResult("GetProducto", new { id = value.ProductoId }, value);
         }
