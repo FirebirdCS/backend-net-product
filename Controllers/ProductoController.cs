@@ -14,9 +14,10 @@ namespace WebApi.Controllers
             this.DbContext = _DbContext;
         }
         [HttpGet]
-        public ActionResult<List<Producto>> Get()
+        public async Task<ActionResult<IEnumerable<Producto>>> Get()
         {
-            var lista = DbContext.Producto.ToList();
+            List<Producto> lista = null;
+            lista = await DbContext.Producto.Include(c => c.Categoria).AsSplitQuery().ToListAsync();
             if (lista == null || lista.Count == 0)
             {
                 return new NoContentResult();
