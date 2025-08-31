@@ -17,6 +17,18 @@ namespace WebApi
             _services.AddEndpointsApiExplorer();
             _services.AddSwaggerGen();
 
+            // Add CORS services
+            _services.AddCors(options =>
+            {
+                options.AddPolicy("AllowBlazorApp", policy =>
+                {
+                    policy.WithOrigins("https://localhost:7000", "http://localhost:5000", "https://localhost:7001", "http://localhost:5001")
+                          .AllowAnyHeader()
+                          .AllowAnyMethod()
+                          .AllowCredentials();
+                });
+            });
+
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -28,6 +40,10 @@ namespace WebApi
             }
             app.UseHttpsRedirection();
             app.UseRouting();
+
+            // Enable CORS
+            app.UseCors("AllowBlazorApp");
+
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
